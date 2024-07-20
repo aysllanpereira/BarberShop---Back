@@ -1,3 +1,4 @@
+// models/booking.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
@@ -37,3 +38,4 @@ const Booking = sequelize.define('Booking', {
 });
 
 module.exports = Booking;
+
