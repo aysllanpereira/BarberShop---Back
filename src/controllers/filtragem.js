@@ -1,6 +1,10 @@
 const { Op } = require('sequelize');
 const Booking = require('../models/booking');
 
+function formatTime(date) {
+    return date.toISOString().split('T')[1].substring(0, 5);
+}
+
 function getStartAndEndOfWeek(date) {
     const startOfWeek = new Date(date);
     const endOfWeek = new Date(date);
@@ -49,7 +53,13 @@ const filterAppointments = async (req, res) => {
             }
         });
 
-        res.json({ success: true, appointments });
+        const formattedAppointments = appointments.map(booking => ({
+            ...booking.toJSON(),
+            time: formatTime(new Date(booking.time)),
+            endTime: formatTime(new Date(booking.endTime))
+        }));
+
+        res.json({ success: true, appointments: formattedAppointments });
     } catch (error) {
         console.error('Erro ao filtrar agendamentos:', error);
         res.status(500).json({ success: false, message: 'Erro ao filtrar agendamentos' });
