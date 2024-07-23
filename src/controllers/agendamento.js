@@ -5,8 +5,14 @@ function formatTime(date) {
     return date.toISOString().split('T')[1].substring(0, 5);
 }
 
+function toUTCDate(date, time) {
+    const localDate = new Date(`${date}T${time}`);
+    const utcDate = new Date(localDate.getTime() + (localDate.getTimezoneOffset() * 60000));
+    return utcDate;
+}
+
 async function isTimeConflict(professional, date, time, duration) {
-    const startTime = new Date(`${date}T${time}`);
+    const startTime = toUTCDate(date, time);
     const endTime = new Date(startTime.getTime() + duration * 60000);
 
     const bookings = await Booking.findAll({
@@ -50,7 +56,7 @@ async function criarAgendamento(req, res) {
             return res.status(409).json({ success: false, message: 'O horário selecionado está ocupado' });
         }
 
-        const startTime = new Date(`${date}T${time}`);
+        const startTime = toUTCDate(date, time);
         const endTime = new Date(startTime.getTime() + duration * 60000);
 
         const newBooking = await Booking.create({
