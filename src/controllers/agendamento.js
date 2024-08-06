@@ -1,3 +1,4 @@
+// controle de agendamentos
 const { Op } = require('sequelize');
 const Booking = require('../models/booking');
 
@@ -114,4 +115,25 @@ async function deleteAgendamento(req, res) {
     }
 }
 
-module.exports = { criarAgendamento, listarAgendamentos, deleteAgendamento };
+// cancelamento de agendamento
+async function cancelarAgendamentos(req, res) {
+    const { professional, date } = req.body;
+    try {
+        const result = await Booking.destroy({
+            where: {
+                professional: professional,
+                date: date
+            }
+        });
+        if (result > 0) {
+            res.json({ success: true, message: 'Agendamentos cancelados com sucesso!' });
+        } else {
+            res.status(404).json({ success: false, message: 'Nenhum agendamento encontrado para cancelar' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Erro ao cancelar agendamentos' });
+    }
+}
+
+module.exports = { criarAgendamento, listarAgendamentos, deleteAgendamento, cancelarAgendamentos };

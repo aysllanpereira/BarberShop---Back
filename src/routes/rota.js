@@ -8,6 +8,7 @@ router.post('/book', controladorAgendamento.criarAgendamento);
 router.get('/bookings', controladorAgendamento.listarAgendamentos);
 router.delete('/book/:id', controladorAgendamento.deleteAgendamento);
 router.get('/filter', filterAppointments);
+router.post('/cancel', controladorAgendamento.cancelarAgendamentos);
 
 module.exports = router;
 
