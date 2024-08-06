@@ -1,3 +1,4 @@
+// controllers/filtragem.js
 const { Op } = require('sequelize');
 const Booking = require('../models/booking');
 
@@ -16,6 +17,20 @@ function getStartAndEndOfWeek(date) {
     endOfWeek.setHours(23, 59, 59, 999);
 
     return { startOfWeek, endOfWeek };
+}
+
+function getStartAndEndOfMonth(date) {
+    const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+    const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    endOfMonth.setHours(23, 59, 59, 999);
+    return { startOfMonth, endOfMonth };
+}
+
+function getStartAndEndOfNextTwoMonths(date) {
+    const startOfNextMonth = new Date(date.getFullYear(), date.getMonth() + 1, 1);
+    const endOfNextTwoMonths = new Date(date.getFullYear(), date.getMonth() + 3, 0);
+    endOfNextTwoMonths.setHours(23, 59, 59, 999);
+    return { startOfNextMonth, endOfNextTwoMonths };
 }
 
 const filterAppointments = async (req, res) => {
@@ -38,6 +53,12 @@ const filterAppointments = async (req, res) => {
             break;
         case 'week':
             ({ startOfWeek: startDate, endOfWeek: endDate } = getStartAndEndOfWeek(today));
+            break;
+        case 'month':
+            ({ startOfMonth: startDate, endOfMonth: endDate } = getStartAndEndOfMonth(today));
+            break;
+        case 'nextTwoMonths':
+            ({ startOfNextMonth: startDate, endOfNextTwoMonths: endDate } = getStartAndEndOfNextTwoMonths(today));
             break;
         default:
             return res.status(400).json({ success: false, message: 'Período inválido' });
@@ -67,3 +88,4 @@ const filterAppointments = async (req, res) => {
 };
 
 module.exports = { filterAppointments };
+
