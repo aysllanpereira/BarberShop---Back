@@ -117,10 +117,11 @@ async function deleteAgendamento(req, res) {
 
 // cancelamento de agendamento
 async function cancelarAgendamentos(req, res) {
-    const { professional, date } = req.body;
+    const { name, professional, date } = req.body;
     try {
         const result = await Booking.destroy({
             where: {
+                name: name,
                 professional: professional,
                 date: date
             }
